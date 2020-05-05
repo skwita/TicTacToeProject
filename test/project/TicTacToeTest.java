@@ -3,6 +3,8 @@ package project;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TicTacToeTest {
@@ -54,5 +56,21 @@ class TicTacToeTest {
         TicTacToe.clear(1, 1, third);
         Assert.assertEquals("_", third.board[0][0]);
     }
+
+    @Test
+    void maxLengthCheck() {
+        TicTacToe first = new TicTacToe(3);
+        TicTacToe.setNought(1, 1, first);
+        TicTacToe.setNought(1, 2, first);
+        TicTacToe.setNought(1, 3, first);
+        Assert.assertEquals("[[0,0],[0,1],[0,2]]" , Arrays.deepToString(TicTacToe.maxLengthCheck(first, "O")));
+        TicTacToe second = new TicTacToe(3);
+        TicTacToe.setCross(1, 1, second);
+        TicTacToe.setCross(2, 1, second);
+        TicTacToe.setCross(3, 1, second);
+        Assert.assertEquals("[[0,0],[1,0],[2,0]]" , Arrays.deepToString(TicTacToe.maxLengthCheck(first ,"X")));
+    }
+
+
 }
 
