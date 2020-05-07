@@ -143,7 +143,7 @@ class TicTacToe {
         int maxLength = -1;
         int length = 0;
 
-        for (int i = test.size - 1; i > 0; i--) { //снизу вверх, нижняя часть
+        for (int i = test.size - 1; i > 0; i--) { //down to up part 1
             for (int j = 0, x = i; x <= test.size - 1; j++, x++) {
                 if(test.board[x][j].equals(Symbol)){
                     length++;
@@ -157,7 +157,7 @@ class TicTacToe {
             }
         }
 
-        for (int i = 0; i <= test.size - 1 - 1; i++) {//снизу вверх, верхняя часть
+        for (int i = 0; i <= test.size - 1 - 1; i++) {//down to up part 2
             for (int j = 0, y = i; y <= test.size - 1 - 1; j++, y++) {
                 if(test.board[j][y].equals(Symbol)){
                     length++;
@@ -171,7 +171,7 @@ class TicTacToe {
             }
         }
 
-        for( int k = 0 ; k < test.size ; k++ ) {//сверху вниз, верхняя часть
+        for( int k = 0 ; k < test.size ; k++ ) {//up to down part 1
             for( int j = 0 ; j <= k ; j++ ) {
                 int i = k - j;
                 if(test.board[i][j].equals(Symbol)){
@@ -186,7 +186,7 @@ class TicTacToe {
             }
         }
 
-        for (int k = test.size - 2 ; k >= 0 ; k--) { //сверху вниз, нижняя часть
+        for (int k = test.size - 2 ; k >= 0 ; k--) { //up to down part 2
             for( int j = 0 ; j <= k ; j++ ) {
                 int i = k - j;
                 if(test.board[test.size - j - 1][test.size - i - 1].equals(Symbol)){
@@ -201,13 +201,6 @@ class TicTacToe {
             }
         }
         return maxSequence;
-    }
-    public static void main (String[] args) {
-        TicTacToe first = new TicTacToe(3);
-        TicTacToe.setNought(1, 1, first);
-        TicTacToe.setNought(1, 2, first);
-        TicTacToe.setNought(1, 3, first);
-        System.out.println(TicTacToe.maxLengthCheck(first, "O"));
     }
 }
 
