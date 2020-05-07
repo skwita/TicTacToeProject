@@ -3,6 +3,7 @@ package project;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,14 +64,38 @@ class TicTacToeTest {
         TicTacToe.setNought(1, 1, first);
         TicTacToe.setNought(1, 2, first);
         TicTacToe.setNought(1, 3, first);
-        Assert.assertEquals("[[0,0],[0,1],[0,2]]" , Arrays.deepToString(TicTacToe.maxLengthCheck(first, "O")));
+        ArrayList<Integer> a = new ArrayList<>();
+        a.add(0);
+        a.add(0);
+        ArrayList<Integer> b = new ArrayList<>();
+        b.add(1);
+        b.add(0);
+        ArrayList<Integer> c = new ArrayList<>();
+        c.add(2);
+        c.add(0);
+        ArrayList<ArrayList<Integer>> sequenceOne = new ArrayList<>();
+        sequenceOne.add(a);
+        sequenceOne.add(b);
+        sequenceOne.add(c);
+        Assert.assertEquals(sequenceOne, TicTacToe.maxLengthCheck(first, "O"));
+
         TicTacToe second = new TicTacToe(3);
         TicTacToe.setCross(1, 1, second);
         TicTacToe.setCross(2, 1, second);
         TicTacToe.setCross(3, 1, second);
-        Assert.assertEquals("[[0,0],[1,0],[2,0]]" , Arrays.deepToString(TicTacToe.maxLengthCheck(first ,"X")));
+        ArrayList<Integer> d = new ArrayList<>();
+        d.add(0);
+        d.add(0);
+        ArrayList<Integer> e = new ArrayList<>();
+        e.add(0);
+        e.add(1);
+        ArrayList<Integer> f = new ArrayList<>();
+        f.add(0);
+        f.add(2);
+        ArrayList<ArrayList<Integer>> sequenceTwo = new ArrayList<>();
+        sequenceTwo.add(d);
+        sequenceTwo.add(e);
+        sequenceTwo.add(f);
+        Assert.assertEquals(sequenceTwo , TicTacToe.maxLengthCheck(first ,"X"));
     }
-
-
 }
-
