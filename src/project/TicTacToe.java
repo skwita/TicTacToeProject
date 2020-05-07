@@ -142,14 +142,27 @@ class TicTacToe {
         ArrayList<ArrayList<Integer>> maxSequence = new ArrayList<>();
         int maxLength = -1;
         int length = 0;
-
         for (int i = test.size - 1; i > 0; i--) { //down to up part 1
             for (int j = 0, x = i; x <= test.size - 1; j++, x++) {
                 if(test.board[x][j].equals(Symbol)){
                     length++;
-                }
-                else{
-                    length = 1;
+                    tempSequence.add(j);
+                    tempSequence.add(i);
+                    currentSequence.add(tempSequence);
+                    tempSequence.clear();
+                    if ((i - 1 == 0) & (j + 1 == test.size)) {
+                        tempSequence.add(j + 1);
+                        tempSequence.add(i - 1);
+                        currentSequence.add(tempSequence);
+                        tempSequence.clear();
+                    }
+                } else{
+                    if (length > maxLength) {
+                        maxLength = length;
+                        length = 0;
+                        maxSequence = currentSequence;
+                    }
+                    currentSequence.clear();
                 }
             }
             if (length > maxLength) {
