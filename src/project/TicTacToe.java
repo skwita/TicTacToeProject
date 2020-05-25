@@ -4,270 +4,194 @@ import java.util.*;
 
 class TicTacToe {
     private final int size;
-    String[][] board;
+    private final Board[][] board;
 
-    TicTacToe(int size) {
-        this.board = new String[size][size];
-        this.size = size;
+    TicTacToe(int n) {
+        board = new Board[n][n];
+        size = n;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                board[j][i] = "_";
+                board[j][i] = Board.E;
             }
         }
     }
 
-    static void setCross(int x, int y, TicTacToe test) {
-        if (test.board[x-1][y-1].equals("_")) {
-            test.board[x-1][y-1] = "X";
+    Board returnValue (int i, int j){
+        return board[i][j];
+    }
+
+    void setCross(int x, int y) {
+        if (board[x-1][y-1].equals(Board.E)) {
+            board[x-1][y-1] = Board.X;
         }
     }
 
-    static void setNought (int x, int y, TicTacToe test) {
-        if (test.board[x-1][y-1].equals("_")) {
-            test.board[x-1][y-1] = "O";
+    void setNought (int x, int y) {
+        if (board[x-1][y-1].equals(Board.E)) {
+            board[x-1][y-1] = Board.O;
         }
     }
 
-    static void clear (int x, int y, TicTacToe test) {
-            test.board[x-1][y-1] = "_";
+    void clear (int x, int y) {
+            board[x-1][y-1] = Board.E;
     }
 
-    public static List<List<Integer>> maxLengthCheck(TicTacToe test, String Symbol) {
-        List<List<Integer>> horizontalSequence = horizontalCheck(test, Symbol);
-        List<List<Integer>> verticalSequence = verticalCheck(test, Symbol);
-        List<List<Integer>> diagonalSequence = diagonalCheck(test, Symbol);
+    public TwoPositions maxLengthCheck(Board Symbol) {
+        TwoPositions horizontalSequence = deltaCheck(Symbol, 1, 0);
+        TwoPositions verticalSequence = deltaCheck(Symbol, 0 , 1);
+        TwoPositions diagonalSequenceFirst = deltaCheck(Symbol,1,1);
+        TwoPositions diagonalSequenceSecond = deltaCheck(Symbol,-1,1);
 
-        int horizontal = -1;
-        if (!horizontalSequence.isEmpty()) {
-            if (!horizontalSequence.get(1).isEmpty()) {
-                horizontal = horizontalSequence.get(1).get(1) - horizontalSequence.get(0).get(1) + 1;
-            }
-        }
+        int horizontal = horizontalSequence.length(false);
+        int vertical = verticalSequence.length(true);
+        int diagonalFirst = diagonalSequenceFirst.length(true);
+        int diagonalSecond = diagonalSequenceSecond.length(true);
+        int maximum = Math.max(Math.max(diagonalFirst,diagonalSecond),(Math.max(vertical, horizontal)));
 
-        int vertical = -1;
-        if (!verticalSequence.isEmpty()){
-            if (!verticalSequence.get(1).isEmpty()) {
-                vertical = verticalSequence.get(1).get(0) - verticalSequence.get(0).get(0) + 1;
-            }
-        }
-
-        int diagonal = -1;
-        if (!diagonalSequence.isEmpty()){
-            if (!diagonalSequence.get(1).isEmpty()) {
-                diagonal = Math.abs(diagonalSequence.get(1).get(0) - diagonalSequence.get(0).get(0)) + 1;
-            }
-        }
-
-        int maximum = Math.max(diagonal,(Math.max(vertical, horizontal)));
-        List<List<Integer>> maxSequence = new ArrayList<>();
-
+        TwoPositions maxSequence = new TwoPositions();
         if (maximum == horizontal) maxSequence = horizontalSequence;
         if (maximum == vertical) maxSequence = verticalSequence;
-        if (maximum == diagonal) maxSequence = diagonalSequence;
+        if (maximum == diagonalFirst) maxSequence = diagonalSequenceFirst;
 
         return maxSequence;
-
     }
 
-    private static List<List<Integer>> horizontalCheck(TicTacToe test, String Symbol) {
+    private TwoPositions deltaCheck(Board Symbol, int deltaX, int deltaY) {
         int maxLength = 0;
         int length = 0;
         int beginI = -1;
         int beginJ = -1;
-        List<Integer> begin = new ArrayList<>();
-        List<Integer> end = new ArrayList<>();
-
-        for (int i = 0; i < test.size ; i++){
-            for (int j = 0; j < test.size; j++) {
-                if (test.board[i][j].equals(Symbol)) {
-                    length++;
-                    if (length == 1) {
-                        beginI = i;
-                        beginJ = j;
-                    }
-                    if (j == test.size - 1 || !test.board[i][j].equals(test.board[i][j + 1])) {
-                        if (length > maxLength) {
-                            maxLength = length;
-                            length = 0;
-                            begin.clear();
-                            begin.add(beginI);
-                            begin.add(beginJ);
-                            end.clear();
-                            end.add(i);
-                            end.add(j);
+        TwoPositions result = new TwoPositions();
+        if (Math.abs(deltaX) != Math.abs(deltaY)){
+            for (int i = 0; i < size ; i += deltaX){
+                for (int j = 0; j < size; j += deltaY) {
+                    if (board[i][j].equals(Symbol)) {
+                        length++;
+                        if (length == 1) {
+                            beginI = i;
+                            beginJ = j;
                         }
+                        if (j == size - 1 || !board[i][j].equals(board[i + deltaX][j + deltaY])) {
+                            if (length > maxLength) {
+                                maxLength = length;
+                                length = 0;
+                                result.clear();
+                                result.addStart(beginI, beginJ);
+                                result.addEnd(i,j);
+                            }
+                        }
+                    }  else {
+                        beginI = -1;
+                        beginJ = -1;
+                        length = 0;
                     }
-                }  else {
-                    beginI = -1;
-                    beginJ = -1;
-                    length = 0;
                 }
             }
-        }
-        return List.of(begin, end);
-    }
-
-    private static List<List<Integer>> verticalCheck(TicTacToe test, String Symbol) {
-        int maxLength = 0;
-        int length = 0;
-        int beginI = -1;
-        int beginJ = -1;
-        List<Integer> begin = new ArrayList<>();
-        List<Integer> end = new ArrayList<>();
-
-        for (int i = 0; i < test.size ; i++){
-            for (int j = 0; j < test.size; j++) {
-                if (test.board[j][i].equals(Symbol)) {
-                    length++;
-                    if (length == 1) {
-                        beginJ = j;
-                        beginI = i;
-                    }
-                    if (j == test.size - 1 || !test.board[j][i].equals(test.board[j + 1][i])) {
-                        if (length > maxLength) {
-                            maxLength = length;
-                            begin.clear();
-                            begin.add(beginJ);
-                            begin.add(beginI);
-                            end.clear();
-                            end.add(j);
-                            end.add(i);
-                            length = 0;
+        } else if (deltaX == deltaY){
+            for (int i = size - 1; i > 0; i--) { //left-up to right-down (bottom)
+                for (int j = 0, k = i; k < size; j++, k++) {
+                    if (board[k][j].equals(Symbol)){
+                        length++;
+                        if (length == 1) {
+                            beginI = k;
+                            beginJ = j;
                         }
+                        if (k == size - 1 || !board[k][j].equals(board[k + 1][j + 1])) {
+                            if (length > maxLength) {
+                                maxLength = length;
+                                result.clear();
+                                result.addStart(beginI, beginJ);
+                                result.addEnd(k ,j);
+                                length = 0;
+                            }
+                        }
+                    } else {
+                        beginI = -1;
+                        beginJ = -1;
+                        length = 0;
                     }
-                } else {
-                    beginI = -1;
-                    beginJ = -1;
-                    length = 0;
                 }
             }
-        }
-        return List.of(begin, end);
-    }
 
-    private static List<List<Integer>> diagonalCheck(TicTacToe test, String Symbol){
-        int maxLength = 0;
-        int length = 0;
-        int beginI = -1;
-        int beginJ = -1;
-        List<Integer> begin = new ArrayList<>();
-        List<Integer> end = new ArrayList<>();
-
-        for (int i = test.size - 1; i > 0; i--) { //left-up to right-down (bottom)
-            for (int j = 0, k = i; k < test.size; j++, k++) {
-                if (test.board[k][j].equals(Symbol)){
-                    length++;
-                    if (length == 1) {
-                        beginI = k;
-                        beginJ = j;
-                    }
-                    if (k == test.size - 1 || !test.board[k][j].equals(test.board[k + 1][j + 1])) {
-                        if (length > maxLength) {
-                            maxLength = length;
-                            begin.clear();
-                            begin.add(beginI);
-                            begin.add(beginJ);
-                            end.clear();
-                            end.add(k);
-                            end.add(j);
-                            length = 0;
+            for (int i = 0; i < size; i++) { //left-up to right-down (mid-top)
+                for (int j = 0, k = i; k < size; j++, k++) {
+                    if (board[j][k].equals(Symbol)){
+                        length++;
+                        if (length == 1) {
+                            beginJ = j;
+                            beginI = k;
                         }
+                        if (k == size - 1 || !board[j][k].equals(board[j + 1][k + 1])) {
+                            if (length > maxLength) {
+                                maxLength = length;
+                                result.clear();
+                                result.addStart(beginJ, beginI);
+                                result.addEnd(j ,k);
+                                length = 0;
+                            }
+                        }
+                    } else {
+                        beginI = -1;
+                        beginJ = -1;
+                        length = 0;
                     }
-                } else {
-                    beginI = -1;
-                    beginJ = -1;
-                    length = 0;
                 }
             }
-        }
-
-        for (int i = 0; i < test.size; i++) { //left-up to right-down (mid-top)
-            for (int j = 0, k = i; k < test.size; j++, k++) {
-                if (test.board[j][k].equals(Symbol)){
-                    length++;
-                    if (length == 1) {
-                        beginJ = j;
-                        beginI = k;
-                    }
-                    if (k == test.size - 1 || !test.board[j][k].equals(test.board[j + 1][k + 1])) {
-                        if (length > maxLength) {
-                            maxLength = length;
-                            begin.clear();
-                            begin.add(beginJ);
-                            begin.add(beginI);
-                            end.clear();
-                            end.add(j);
-                            end.add(k);
-                            length = 0;
+        } else {
+            for (int k = 0; k < size; k++) { // left-down to right-up (mid-top)
+                for (int j = 0; j <= k; j++) {
+                    int i = k - j;
+                    if (board[i][j].equals(Symbol)){
+                        length++;
+                        if (length == 1) {
+                            beginI = i;
+                            beginJ = j;
                         }
+                        if (i == 0 || !board[i][j].equals(board[i - 1][j + 1])) {
+                            if (length > maxLength) {
+                                maxLength = length;
+                                result.clear();
+                                result.addStart(beginI, beginJ);
+                                result.addEnd(i ,j);
+                                length = 0;
+                            }
+                        }
+                    } else {
+                        beginI = -1;
+                        beginJ = -1;
+                        length = 0;
                     }
-                } else {
-                    beginI = -1;
-                    beginJ = -1;
-                    length = 0;
+                }
+            }
+
+            for (int k = size - 2 ; k >= 0 ; k--) { // left-down to right-up (bottom)
+                for (int j = 0 ; j <= k ; j++ ) {
+                    int i = k - j;
+                    if (board[size - 1 - j][size - 1 - i].equals(Symbol)){
+                        length++;
+                        if (length == 1) {
+                            beginJ = size - 1 - j;
+                            beginI = size - 1 - i;
+                        }
+                        if (i == 0 ||
+                                !board[size - 1 - j][size - 1 - i].equals(board[size - 2 - j][size - i])) {
+                            if (length > maxLength) {
+                                maxLength = length;
+                                result.clear();
+                                result.addStart(beginJ, beginI);
+                                result.addEnd(size - 1 - j,size - 1 - i);
+                                length = 0;
+                            }
+                        }
+                    } else {
+                        beginI = -1;
+                        beginJ = -1;
+                        length = 0;
+                    }
                 }
             }
         }
 
-        for (int k = 0; k < test.size; k++) { // left-down to right-up (mid-top)
-            for (int j = 0; j <= k; j++) {
-                int i = k - j;
-                if (test.board[i][j].equals(Symbol)){
-                    length++;
-                    if (length == 1) {
-                        beginI = i;
-                        beginJ = j;
-                    }
-                    if (i == 0 || !test.board[i][j].equals(test.board[i - 1][j + 1])) {
-                        if (length > maxLength) {
-                            maxLength = length;
-                            begin.clear();
-                            begin.add(beginI);
-                            begin.add(beginJ);
-                            end.clear();
-                            end.add(i);
-                            end.add(j);
-                            length = 0;
-                        }
-                    }
-                } else {
-                    beginI = -1;
-                    beginJ = -1;
-                    length = 0;
-                }
-            }
-        }
-
-        for (int k = test.size - 2 ; k >= 0 ; k--) { // left-down to right-up (bottom)
-            for (int j = 0 ; j <= k ; j++ ) {
-                int i = k - j;
-                if (test.board[test.size - 1 - j][test.size - 1 - i].equals(Symbol)){
-                    length++;
-                    if (length == 1) {
-                        beginJ = test.size - 1 - j;
-                        beginI = test.size - 1 - i;
-                    }
-                    if (i == 0 ||
-                            !test.board[test.size - 1 - j][test.size - 1 - i].equals(test.board[test.size - 2 - j][test.size - i])) {
-                        if (length > maxLength) {
-                            maxLength = length;
-                            begin.clear();
-                            begin.add(beginJ);
-                            begin.add(beginI);
-                            end.clear();
-                            end.add(test.size - 1 - j);
-                            end.add(test.size - 1 - i);
-                            length = 0;
-                        }
-                    }
-                } else {
-                    beginI = -1;
-                    beginJ = -1;
-                    length = 0;
-                }
-            }
-        }
-
-        return List.of(begin, end);
+        return result;
     }
 }
