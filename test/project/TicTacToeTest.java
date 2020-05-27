@@ -61,7 +61,7 @@ class TicTacToeTest {
     @Test
     void maxLengthCheck() {
 
-        TicTacToe first = new TicTacToe(9); //horizontal check
+        TicTacToe first = new TicTacToe(10); //horizontal check
         first.setNought(2, 2);
         first.setNought(2, 3);
         first.setNought(2, 4);
@@ -86,13 +86,9 @@ class TicTacToeTest {
         first.setNought(9, 8);
         first.setNought(9, 9);
 
-        TwoPositions sequenceOne = new TwoPositions();
-        sequenceOne.addStart(4,1);
-        sequenceOne.addEnd(4,6);
+        Assert.assertEquals("[(4;1),(4;6)]", first.maxLengthCheck(Board.O).toString());
 
-        Assert.assertEquals(sequenceOne, first.maxLengthCheck(Board.O));
-
-        TicTacToe second = new TicTacToe(9); //vertical check
+        TicTacToe second = new TicTacToe(10); //vertical check
         second.setCross(2, 2);
         second.setCross(3, 2);
         second.setCross(4, 2);
@@ -128,12 +124,9 @@ class TicTacToeTest {
         second.setCross(8, 9);
         second.setCross(9, 9);
 
-        TwoPositions sequenceTwo = new TwoPositions();
-        sequenceTwo.addStart(3,8);
-        sequenceTwo.addEnd(8,8);
-        Assert.assertEquals(sequenceTwo , second.maxLengthCheck(Board.X));
+        Assert.assertEquals("[(3;8),(8;8)]" , second.maxLengthCheck(Board.X).toString());
 
-        TicTacToe third = new TicTacToe(9); //mixed check for vertical and horizontal
+        TicTacToe third = new TicTacToe(10); //mixed check for vertical and horizontal
         third.setNought(7, 5);
         third.setNought(8, 5);
         third.setNought(9, 5);
@@ -147,13 +140,10 @@ class TicTacToeTest {
         third.setNought(5, 8);
         third.setNought(5, 9);
 
-        TwoPositions sequenceThree = new TwoPositions();
-        sequenceThree.addStart(4,1);
-        sequenceThree.addEnd(4,8);
-        Assert.assertEquals(sequenceThree , third.maxLengthCheck(Board.O));
+        Assert.assertEquals("[(4;1),(4;8)]" , third.maxLengthCheck(Board.O).toString());
 
 
-        TicTacToe fourth = new TicTacToe(9); //diagonal check down-to-up
+        TicTacToe fourth = new TicTacToe(10); //diagonal check down-to-up
         fourth.setNought(2, 1);
         fourth.setNought(3, 2);
         fourth.setNought(4, 3);
@@ -172,12 +162,9 @@ class TicTacToeTest {
         fourth.setNought(5, 6);
         fourth.setNought(6, 7);
 
-        TwoPositions sequenceFour = new TwoPositions();
-        sequenceFour.addStart(1,2);
-        sequenceFour.addEnd(5,6);
-        Assert.assertEquals(sequenceFour , fourth.maxLengthCheck(Board.O));
+        Assert.assertEquals("[(1;2),(5;6)]" , fourth.maxLengthCheck(Board.O).toString());
 
-        TicTacToe fifth = new TicTacToe(9); //diagonal check up-to-down
+        TicTacToe fifth = new TicTacToe(10); //diagonal check up-to-down
         fifth.setCross(5, 2);
         fifth.setCross(4, 3);
         fifth.setCross(3, 4);
@@ -190,12 +177,9 @@ class TicTacToeTest {
         fifth.setCross(2, 8);
         fifth.setCross(1, 9);
 
-        TwoPositions sequenceFive = new TwoPositions();
-        sequenceFive.addStart(4,4);
-        sequenceFive.addEnd(0,8);
-        Assert.assertEquals(sequenceFive , fifth.maxLengthCheck(Board.X));
+        Assert.assertEquals("[(4;4),(0;8)]" , fifth.maxLengthCheck(Board.X).toString());
 
-        TicTacToe sixth = new TicTacToe(9); //mixed check for all directions
+        TicTacToe sixth = new TicTacToe(10); //mixed check for all directions
         sixth.setNought(3, 4);
         sixth.setNought(4, 4);
         sixth.setNought(5, 4);
@@ -214,15 +198,8 @@ class TicTacToeTest {
         sixth.setCross(4, 5);
         sixth.setCross(6, 7);
 
-        TwoPositions sequenceSix = new TwoPositions();
-        sequenceSix.addStart(2,3);
-        sequenceSix.addEnd(5,3);
-        Assert.assertEquals(sequenceSix , sixth.maxLengthCheck(Board.O));
-
-        TwoPositions sequenceSeven = new TwoPositions();
-        sequenceSeven.addStart(6,3);
-        sequenceSeven.addEnd(3,6);
-        Assert.assertEquals(sequenceSeven , sixth.maxLengthCheck(Board.X));
+        Assert.assertEquals("[(2;3),(5;3)]" , sixth.maxLengthCheck(Board.O).toString());
+        Assert.assertEquals("[(6;3),(3;6)]" , sixth.maxLengthCheck(Board.X).toString());
 
     }
 
