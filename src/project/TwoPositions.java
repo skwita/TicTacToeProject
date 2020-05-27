@@ -22,9 +22,12 @@ public class TwoPositions {
     }
     public int length(boolean vertical){
         if (vertical){
-            return (endFirst - startFirst + 1);
+            return Math.abs(endFirst - startFirst) + 1;
         } else {
-            return (endSecond - startSecond + 1);
+            return Math.abs(endSecond - startSecond) + 1;
         }
+    }
+    public String toString(){
+        return "[("+startFirst+";"+startSecond+"),("+endFirst+";"+endSecond+")]";
     }
 }
